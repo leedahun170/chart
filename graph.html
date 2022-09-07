@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<title>NOCKANDA EXAMPLE</title>
+	<style>
+		.big_font {
+			font-size: 16px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<h1 style="font-size:10px;">운동량</h1>
+	<div style="width:100%;">
+		<canvas id="line1"></canvas>
+	</div>
+	<span class="big_font">근육 자극 최대값:</span><span id="number_text" class="big_font"></span>
+
+	<script type="text/javascript" charset="utf-8" src="./chart.js"></script>
+	<script>
+		let ctx = document.getElementById('line1').getContext('2d');
+		let chart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: ['', '', '', '', '', '', ''],
+				datasets: [
+					{
+						label: '근육자극 및 활성도',
+						backgroundColor: 'transparent',
+						borderColor: "red",
+						borderWidth: 1,
+						pointRadius: 1,
+						data: [0, 0, 0, 0, 0, 0, 0]
+					}
+				],
+			},
+			options: {}
+		});
+
+		let maxValue = 0;
+
+		function updateChart() {
+			let arduinoNumber = +window.AppInventor.getWebViewString();
+
+			if (arduinoNumber > maxValue) {
+				maxValue = arduinoNumber;
+			}
+
+			chart.data.labels.push('');
+			chart.data.datasets[0].data.push(arduinoNumber);
+			chart.update();
+		}
+
+		function clearChart() {
+			let recv = window.AppInventor.getWebViewString();
+
+			chart.data.labels = ['', '', '', '', '', '', ''];
+			chart.data.datasets[0].data = [0, 0, 0, 0, 0, 0, 0];
+			maxValue = 0;
+
+
+			chart.update();
+		}
+
+		const numberText = document.getElementById('number_text');
+		function updateMax() {
+			numberText.textContent = maxValue;
+		}
+
+
+	</script>
+
+
+</body>
+
+</html>
